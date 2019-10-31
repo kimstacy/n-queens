@@ -131,7 +131,7 @@
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
       const diagonal = this.rows().map((row, i) => row[i + majorDiagonalColumnIndexAtFirstRow] || 0);
       let count = 0;
-      for (cell of diagonal) {
+      for (const cell of diagonal) {
         count += cell;
       }
       return count > 1;
@@ -155,12 +155,27 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      const diagonal =
+        this.rows() .map(
+          (row, i) => row[minorDiagonalColumnIndexAtFirstRow - i] || 0
+        );
+
+      let count = 0;
+      for (const cell of diagonal) {
+        count += cell;
+      }
+      return count > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var limit = 2 * this.rows().length - 3;
+      for (let i = 1; i <= limit; i++) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
