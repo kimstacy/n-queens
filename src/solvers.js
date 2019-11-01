@@ -13,18 +13,58 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
-
-
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
+  // How do we know when we've placed enough rooks?
+  // How do we keep track of which piece to move if we backtrack
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+  // create a board with size n
+  var board = new Board({n});
+  var row = 0;
+  var col = 0;
+
+  while (row < n) {
+    //place a new piece
+    board.togglePiece(row, col); //  (r,c)
+    //if conflict
+    if (board.hasAnyRooksConflicts()) {
+      board.togglePiece(row, col);
+      col++;
+      while (col === n) { // backtracking
+        row--;
+        if (row < 0) {
+          return board.rows();
+        }
+        col = this.rows()[row].indexOf(1); // Figure out which col-index is occupied in a row [backtracking]
+        board.togglePiece(row, col); // make existing piece disappear
+        col++;
+      }
+    } else { // no conflict, go to the next row, start at col 0
+      row++;
+      col = 0;
+    }
+  }
+  return board.rows();
+  /*
+  new Board({n: 4});
+  board.togglePiece(r, c);
+  board.hasAnyRooksConflicts();
+  board.hasAnyColConflicts();
+  board.hasColConflictAt();
+
+  return board.rows();
+  [
+    [0, 0, 1],
+    [0, 1, 0],
+    [1, 0, 0],
+  ]
+ */
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
   var solutionCount = undefined; //fixme
+
+  // if number of pieces matches number of solutions
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
